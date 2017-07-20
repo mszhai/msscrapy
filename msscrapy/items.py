@@ -37,6 +37,13 @@ class Spider1(Item):
     questions_following = Field()
     collections_following = Field()
 
+class ZhihuItem(Item):
+    user = Field()
+    detail = Field()
+
+class ZhihuListItem(Item):
+    user1  = Field()
+
 class DmozItem(Item):
     title = Field()
     link = Field()
