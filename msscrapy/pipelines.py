@@ -24,14 +24,20 @@ class JsonWriterPipeline(object):
         # 文件是否存在
         with open(self.file_path1, 'wt', encoding='utf8') as f:
             f.write('')
-        if not os.path.exists(self.file_path):
-            with open(self.file_path, 'wt', encoding='utf8') as f:
-                f.write('')
+        #if not os.path.exists(self.file_path):
+        with open(self.file_path, 'wt', encoding='utf8') as f:
+            f.write('')
+        self.users = set()
+        self.users_seen = set()
 
     def process_item(self, item, spider):
         if isinstance(item, ZhihuListItem):
-            with open(self.file_path, 'at', encoding='utf8') as f:
-                json.dump(dict(item), f)
+            user = dict(item)['user1']
+            if user not in self.users:
+                with open(self.file_path, 'at', encoding='utf8') as f:
+                    json.dump(dict(item), f)
+                    f.write(',')
+            self.users.add(user)
         if isinstance(item, ZhihuItem):
             with open(self.file_path1, 'at', encoding='utf8') as f:
                 json.dump(dict(item), f)

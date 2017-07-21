@@ -15,6 +15,16 @@ class MySpider(scrapy.Spider):
         'https://www.zhihu.com/people/xie-ke-41/following',
     ]
 
+    def start_requests(self):
+        """
+        登陆页面 获取xrsf
+        """
+        return [scrapy.Request(
+            "https://www.zhihu.com/people/xie-ke-41/following",
+            meta={'user': 'xie-ke-41'},
+            callback=self.parse
+        )]
+
     def parse(self, response):
         self.log('A response from %s just arrived!' % response.url)
         #content = scrapy.Selector(response)
@@ -22,6 +32,12 @@ class MySpider(scrapy.Spider):
         set_tem = set()
         user_item = ZhihuListItem()
         item = ZhihuItem()
+        #if link.find('page') == -1:
+        item['user'] = response.meta['user']
+        detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
+        item['detail'] = detail[1].xpath('./text()').extract()[0]
+        yield item
+
         for link in link_tem:
             # 匹配用户名
             user = re.findall(r'people\/([^\/]*)', link)
@@ -32,20 +48,8 @@ class MySpider(scrapy.Spider):
             link = 'https://www.zhihu.com/people/' + user + '/following'
             #print('link======' + link)
             yield user_item
-            yield scrapy.Request(link, callback=self.parse)
-            if link.find('page') == -1:
-                item['user'] = 'sss'
-                detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-                item['detail'] = detail[1].xpath('./text()').extract()[0]
-                yield item
-        """
-        item = ZhihuItem()
-        item['user'] = 'sss'
-        detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-        item['detail'] = detail[1].xpath('./text()').extract()[0]
-        item['detail'] = 'ssssss'
-        return item
-        """
+            yield scrapy.Request(link, meta={'user': user}, callback=self.parse)
+
 
     def get_links(self, html):
         """Return a list of links from html
