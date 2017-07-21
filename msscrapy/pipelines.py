@@ -6,6 +6,10 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import json
+import os
+
+from msscrapy.items import ZhihuItem
+from msscrapy.items import ZhihuListItem
 
 class MsscrapyPipeline(object):
     def process_item(self, item, spider):
@@ -14,9 +18,21 @@ class MsscrapyPipeline(object):
 class JsonWriterPipeline(object):
 
     def __init__(self):
-        self.file = open('items.json', 'wb')
+        disk = os.getcwd()
+        self.file_path = disk + r'/data.json'
+        self.file_path1 = disk + r'/data1.json'
+        # 文件是否存在
+        with open(self.file_path1, 'wt', encoding='utf8') as f:
+            f.write('')
+        if not os.path.exists(self.file_path):
+            with open(self.file_path, 'wt', encoding='utf8') as f:
+                f.write('')
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item)) + "\n"
-        self.file.write(line)
+        if isinstance(item, ZhihuListItem):
+            with open(self.file_path, 'at', encoding='utf8') as f:
+                json.dump(dict(item), f)
+        if isinstance(item, ZhihuItem):
+            with open(self.file_path1, 'at', encoding='utf8') as f:
+                json.dump(dict(item), f)
         return item

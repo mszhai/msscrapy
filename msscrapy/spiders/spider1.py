@@ -9,7 +9,7 @@ from msscrapy.items import ZhihuListItem
 
 class MySpider(scrapy.Spider):
     name = 'spider1'
-    allowed_domains = 'www.zhihu.com'
+    #allowed_domains = 'zhihu.com'
 
     start_urls = [
         'https://www.zhihu.com/people/xie-ke-41/following',
@@ -19,9 +19,9 @@ class MySpider(scrapy.Spider):
         self.log('A response from %s just arrived!' % response.url)
         #content = scrapy.Selector(response)
         link_tem = response.xpath("//@href").extract()
-        """
         set_tem = set()
         user_item = ZhihuListItem()
+        item = ZhihuItem()
         for link in link_tem:
             # 匹配用户名
             user = re.findall(r'people\/([^\/]*)', link)
@@ -29,14 +29,23 @@ class MySpider(scrapy.Spider):
                 set_tem.add(user[0])
         for user in set_tem:
             user_item['user1'] = user
+            link = 'https://www.zhihu.com/people/' + user + '/following'
+            #print('link======' + link)
             yield user_item
+            yield scrapy.Request(link, callback=self.parse)
+            if link.find('page') == -1:
+                item['user'] = 'sss'
+                detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
+                item['detail'] = detail[1].xpath('./text()').extract()[0]
+                yield item
         """
         item = ZhihuItem()
         item['user'] = 'sss'
         detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-        #item['detail'] = detail[1].xpath('./text()').extract()[0]
+        item['detail'] = detail[1].xpath('./text()').extract()[0]
         item['detail'] = 'ssssss'
         return item
+        """
 
     def get_links(self, html):
         """Return a list of links from html
