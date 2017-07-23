@@ -22,6 +22,10 @@ class MySpider(scrapy.Spider):
         set_tem = set()
         user_item = ZhihuListItem()
         item = ZhihuItem()
+        item['user'] = re.findall(r'people\/([^\/]*)', response.url)
+        detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
+        item['detail'] = detail[1].xpath('./text()').extract()[0]
+        yield item
         for link in link_tem:
             # 匹配用户名
             user = re.findall(r'people\/([^\/]*)', link)
@@ -33,11 +37,6 @@ class MySpider(scrapy.Spider):
             #print('link======' + link)
             yield user_item
             yield scrapy.Request(link, callback=self.parse)
-            if link.find('page') == -1:
-                item['user'] = 'sss'
-                detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-                item['detail'] = detail[1].xpath('./text()').extract()[0]
-                yield item
         """
         item = ZhihuItem()
         item['user'] = 'sss'
