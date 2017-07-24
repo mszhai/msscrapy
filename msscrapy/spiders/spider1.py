@@ -32,19 +32,12 @@ class MySpider(scrapy.Spider):
         set_tem = set()
         user_item = ZhihuListItem()
         item = ZhihuItem()
-<<<<<<< HEAD
         #if link.find('page') == -1:
         item['user'] = response.meta['user']
         detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
         item['detail'] = detail[1].xpath('./text()').extract()[0]
         yield item
 
-=======
-        item['user'] = re.findall(r'people\/([^\/]*)', response.url)
-        detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-        item['detail'] = detail[1].xpath('./text()').extract()[0]
-        yield item
->>>>>>> fcc280b5c77b6987b1f0fd7a89eaef258a0c1f37
         for link in link_tem:
             # 匹配用户名
             user = re.findall(r'people\/([^\/]*)', link)
@@ -55,20 +48,8 @@ class MySpider(scrapy.Spider):
             link = 'https://www.zhihu.com/people/' + user + '/following'
             #print('link======' + link)
             yield user_item
-<<<<<<< HEAD
             yield scrapy.Request(link, meta={'user': user}, callback=self.parse)
 
-=======
-            yield scrapy.Request(link, callback=self.parse)
-        """
-        item = ZhihuItem()
-        item['user'] = 'sss'
-        detail = response.xpath('//*[@id="ProfileHeader"]/div/div[2]/div/div[2]/div[1]/h1/span')
-        item['detail'] = detail[1].xpath('./text()').extract()[0]
-        item['detail'] = 'ssssss'
-        return item
-        """
->>>>>>> fcc280b5c77b6987b1f0fd7a89eaef258a0c1f37
 
     def get_links(self, html):
         """Return a list of links from html
