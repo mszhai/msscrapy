@@ -48,4 +48,13 @@ class DmozItem(Item):
     title = Field()
     link = Field()
     desc = Field()
+
+class DrugGuoyaoItem(Item):
+    drugname = Field()
+    guochanparam = Field()
+    guochannum = Field()
+    jinkouparam = Field()
+    jinkounum = Field()
+    guanggaoparam = Field()
+    guanggaonum = Field()
     
