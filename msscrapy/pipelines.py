@@ -7,9 +7,11 @@
 
 import json
 import os
+import csv
 
 from msscrapy.items import ZhihuItem
 from msscrapy.items import ZhihuListItem
+from msscrapy import items
 
 class MsscrapyPipeline(object):
     def process_item(self, item, spider):
@@ -42,3 +44,19 @@ class JsonWriterPipeline(object):
             with open(self.file_path1, 'at', encoding='utf8') as f:
                 json.dump(dict(item), f)
         return item
+
+class CSVPipeline(object):
+
+    def __init__(self):
+        self.headers = ['drugname', 'guochanparam', 'guochannum', 'jinkouparam', 'jinkounum', 'guanggaoparam', 'guanggaonum']
+        disk = os.getcwd()
+        self.file_path = disk + r'/data.csv'
+        with open(self.file_path, 'w', newline='', encoding='utf8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(self.headers)
+    
+    def process_item(self, item, spider):
+        if isinstance(item, items.DrugGuoyaoItem):
+            with open(self.file_path, 'a', newline='', encoding='gbk', errors='ignore') as csvfile:
+                writer = csv.DictWriter(csvfile, self.headers)
+                writer.writerow(dict(item))

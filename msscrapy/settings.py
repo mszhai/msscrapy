@@ -66,6 +66,7 @@ COOKIES_ENABLED = False
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'msscrapy.pipelines.MsscrapyPipeline': 300,
+    'msscrapy.pipelines.CSVPipeline': 500,
     'msscrapy.pipelines.JsonWriterPipeline': 800,
 }
 
