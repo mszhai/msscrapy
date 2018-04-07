@@ -5,12 +5,12 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+# import scrapy
 from scrapy import Item
 from scrapy import Field
 
 
-class MsscrapyItem(scrapy.Item):
+class MsscrapyItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
@@ -57,4 +57,16 @@ class DrugGuoyaoItem(Item):
     jinkounum = Field()
     guanggaoparam = Field()
     guanggaonum = Field()
+
+class SSFocus(Item):
+    """源网址的item
+
+    源：www.stockstar.com/focus/
     
+    :title 新闻标题
+    :url 新闻详情页url
+    :pub_time 新闻发表时间
+    """
+    title = Field()
+    url = Field()
+    pub_time = Field()
